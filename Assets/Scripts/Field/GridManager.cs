@@ -7,6 +7,7 @@ public class GridManager : MonoBehaviour
     public int width = 10;
     public int height = 10;
     public GameObject nodePrefab;
+    public GameObject wallPrefab;
     [Range(0f, 1f)] public float blockedCellChance = 0.2f;
 
     [Header("Enemy Settings")]
@@ -15,6 +16,7 @@ public class GridManager : MonoBehaviour
 
     private Dictionary<Vector2Int, GridNode> grid = new();
     private Dictionary<Vector2Int, GameObject> visuals = new();
+    private Dictionary<Vector2Int, GameObject> wallVisuals = new();
 
     private Vector2Int startPos;
     private Vector2Int endPos;
@@ -27,6 +29,7 @@ public class GridManager : MonoBehaviour
         pathfinding = new Pathfinding(this);
         GeneratePlayableLevel();
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -74,7 +77,6 @@ public class GridManager : MonoBehaviour
             {
                 Debug.Log($"Path found after {tries + 1} attempt(s).");
 
-                // Спавним врага и запускаем движение
                 SpawnEnemyAndRunPath(path.ConvertAll(node => node.GridPosition));
                 break;
             }
@@ -87,13 +89,15 @@ public class GridManager : MonoBehaviour
         }
     }
 
-
-
-
     public void GenerateRandomLevel()
     {
-        startPos = new Vector2Int(0, 0);
-        endPos = new Vector2Int(width - 1, height - 1);
+        // Находим старт и финиш, которые находятся не ближе 5 клеток
+        do
+        {
+            startPos = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+            endPos = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+        }
+        while (ManhattanDistance(startPos, endPos) < 5);
 
         foreach (var kvp in grid)
         {
@@ -114,6 +118,12 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    private int ManhattanDistance(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
 
     public void SpawnEnemyAndRunPath(List<Vector2Int> path)
     {
@@ -140,8 +150,10 @@ public class GridManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
         grid.Clear();
         visuals.Clear();
+        wallVisuals.Clear();
     }
 
     public GridNode GetNode(Vector2Int pos)
@@ -175,21 +187,51 @@ public class GridManager : MonoBehaviour
 
     public void SetNodeType(Vector2Int pos, NodeType type)
     {
-        if (grid.ContainsKey(pos))
-        {
-            grid[pos].Type = type;
+        if (!grid.ContainsKey(pos)) return;
 
-            var renderer = visuals[pos].GetComponent<Renderer>();
-            if (renderer != null)
+        grid[pos].Type = type;
+
+        var renderer = visuals[pos].GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            switch (type)
             {
-                switch (type)
-                {
-                    case NodeType.Free: renderer.material.color = Color.white; break;
-                    case NodeType.Blocked: renderer.material.color = Color.black; break;
-                    case NodeType.Start: renderer.material.color = Color.green; break;
-                    case NodeType.End: renderer.material.color = Color.red; break;
-                }
+                case NodeType.Free:
+                    renderer.material.color = Color.white;
+                    DestroyWallAt(pos);
+                    break;
+                case NodeType.Blocked:
+                    renderer.material.color = Color.gray;
+                    CreateWallAt(pos);
+                    break;
+                case NodeType.Start:
+                    renderer.material.color = Color.green;
+                    DestroyWallAt(pos);
+                    break;
+                case NodeType.End:
+                    renderer.material.color = Color.red;
+                    DestroyWallAt(pos);
+                    break;
             }
+        }
+    }
+
+    private void CreateWallAt(Vector2Int pos)
+    {
+        if (wallPrefab == null || wallVisuals.ContainsKey(pos)) return;
+
+        Vector3 wallPos = new Vector3(pos.x, 1f, pos.y); // выше на 1 единицу
+        GameObject wall = Instantiate(wallPrefab, wallPos, Quaternion.identity, transform);
+        wall.name = $"Wall_{pos.x}_{pos.y}";
+        wallVisuals[pos] = wall;
+    }
+
+    private void DestroyWallAt(Vector2Int pos)
+    {
+        if (wallVisuals.TryGetValue(pos, out var wall))
+        {
+            Destroy(wall);
+            wallVisuals.Remove(pos);
         }
     }
 
