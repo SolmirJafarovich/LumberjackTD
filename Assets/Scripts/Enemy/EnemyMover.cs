@@ -9,11 +9,11 @@ public class EnemyMover : MonoBehaviour
 
     private List<Vector2Int> path;
     private int currentIndex = 0;
-    private GridManager gridManager;
+    private GridFactory gridFactory;
 
-    public void Init(GridManager manager, List<Vector2Int> path)
+    public void Init(GridFactory manager, List<Vector2Int> path)
     {
-        this.gridManager = manager;
+        this.gridFactory = manager;
         this.path = path;
         this.currentIndex = 0;
 

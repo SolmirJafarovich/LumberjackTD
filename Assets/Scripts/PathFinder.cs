@@ -1,81 +1,71 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathfinding
+public class Pathfinder
 {
-    private readonly GridManager grid;
+    private readonly GridFactory factory;
 
-    public Pathfinding(GridManager gridManager)
+    public Pathfinder(GridFactory factory)
     {
-        grid = gridManager;
+        this.factory = factory;
     }
 
-    public List<GridNode> FindPath(Vector2Int startPos, Vector2Int endPos)
+    public List<GridNode> FindPath(Vector2Int start, Vector2Int end)
     {
-        GridNode startNode = grid.GetNode(startPos);
-        GridNode endNode = grid.GetNode(endPos);
+        var open = new Queue<GridNode>();
+        var cameFrom = new Dictionary<GridNode, GridNode>();
+        var visited = new HashSet<GridNode>();
 
-        foreach (var node in grid.GetAllNodes())
+        GridNode startNode = factory.GetNode(start);
+        GridNode endNode = factory.GetNode(end);
+
+        open.Enqueue(startNode);
+        visited.Add(startNode);
+
+        while (open.Count > 0)
         {
-            node.ResetPathfindingData();
-        }
-
-        List<GridNode> openSet = new() { startNode };
-        HashSet<GridNode> closedSet = new();
-
-        while (openSet.Count > 0)
-        {
-            GridNode current = GetLowestFCostNode(openSet);
+            var current = open.Dequeue();
 
             if (current == endNode)
-                return ReconstructPath(endNode);
-
-            openSet.Remove(current);
-            closedSet.Add(current);
-
-            foreach (var neighbour in grid.GetNeighbours(current))
             {
-                if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
-                    continue;
-
-                float tentativeGCost = current.GCost + Vector2Int.Distance(current.GridPosition, neighbour.GridPosition);
-
-                if (tentativeGCost < neighbour.GCost || !openSet.Contains(neighbour))
+                List<GridNode> path = new();
+                while (current != startNode)
                 {
-                    neighbour.GCost = tentativeGCost;
-                    neighbour.HCost = Vector2Int.Distance(neighbour.GridPosition, endNode.GridPosition);
-                    neighbour.Parent = current;
+                    path.Add(current);
+                    current = cameFrom[current];
+                }
+                path.Add(startNode);
+                path.Reverse();
+                return path;
+            }
 
-                    if (!openSet.Contains(neighbour))
-                        openSet.Add(neighbour);
+            foreach (var neighbor in GetNeighbours(current))
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    visited.Add(neighbor);
+                    cameFrom[neighbor] = current;
+                    open.Enqueue(neighbor);
                 }
             }
         }
 
-        return null; // путь не найден
+        return null;
     }
 
-    private GridNode GetLowestFCostNode(List<GridNode> nodes)
+    private IEnumerable<GridNode> GetNeighbours(GridNode node)
     {
-        GridNode lowest = nodes[0];
-        foreach (var node in nodes)
-        {
-            if (node.FCost < lowest.FCost)
-                lowest = node;
-        }
-        return lowest;
-    }
+        Vector2Int[] dirs = {
+            Vector2Int.up, Vector2Int.down,
+            Vector2Int.left, Vector2Int.right
+        };
 
-    private List<GridNode> ReconstructPath(GridNode endNode)
-    {
-        List<GridNode> path = new();
-        GridNode current = endNode;
-        while (current != null)
+        foreach (var dir in dirs)
         {
-            path.Add(current);
-            current = current.Parent;
+            Vector2Int pos = node.GridPosition + dir;
+            var neighbor = factory.GetNode(pos);
+            if (neighbor != null && neighbor.Type != NodeType.Blocked)
+                yield return neighbor;
         }
-        path.Reverse();
-        return path;
     }
 }
