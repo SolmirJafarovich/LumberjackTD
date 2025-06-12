@@ -317,7 +317,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2090467223}
-  - component: {fileID: 2090467222}
+  - component: {fileID: 2090467224}
   m_Layer: 0
   m_Name: LevelGridManager
   m_TagString: Untagged
@@ -325,22 +325,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2090467222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090467221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70d96c56bcee1c445b38479f863ecc5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 38634714e9ac1fd42b8a559b0da23b26, type: 2}
-  nodePrefab: {fileID: 1349771968178665082, guid: deb8617e576b4824aae35a5062751cbf, type: 3}
-  enemyPrefab: {fileID: 8468387524907407834, guid: 1cad2ca756abbc64a86c8bdec2b2b8e9, type: 3}
-  stepMarkerPrefab: {fileID: 3621669873784250261, guid: d090c9304dadf354ba141e99ce818c3b, type: 3}
 --- !u!4 &2090467223
 Transform:
   m_ObjectHideFlags: 0
@@ -356,6 +340,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2090467224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090467221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2f3d7372916e64c845f96eb92ec8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 38634714e9ac1fd42b8a559b0da23b26, type: 2}
+  nodePrefab: {fileID: 1349771968178665082, guid: deb8617e576b4824aae35a5062751cbf, type: 3}
+  enemyPrefab: {fileID: 8468387524907407834, guid: 1cad2ca756abbc64a86c8bdec2b2b8e9, type: 3}
+  stepMarkerPrefab: {fileID: 3621669873784250261, guid: d090c9304dadf354ba141e99ce818c3b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

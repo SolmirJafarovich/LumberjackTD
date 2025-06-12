@@ -1,27 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class GridManager : MonoBehaviour
+public class LevelSystem
 {
-    [SerializeField] private GridSettings settings;
-    [SerializeField] private GameObject nodePrefab;
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private GameObject stepMarkerPrefab;
+    private readonly GridFactory gridFactory;
+    private readonly GridVisual gridVisual;
+    private readonly LevelGenerator levelGenerator;
+    private readonly EnemySpawner enemySpawner;
+    private readonly Pathfinder pathfinder;
+    private readonly LevelInputHandler inputHandler;
 
-    private GridFactory gridFactory;
-    private GridVisual gridVisual;
-    private LevelGenerator levelGenerator;
-    private EnemySpawner enemySpawner;
-    private Pathfinder pathfinder;
-    private LevelInputHandler inputHandler;
-
-    void Start()
+    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, Transform parent)
     {
         gridFactory = new GridFactory(settings);
         gridFactory.GenerateGrid();
-
-        gridVisual = new GridVisual(gridFactory, nodePrefab, transform);
         pathfinder = new Pathfinder(gridFactory);
+        gridVisual = new GridVisual(gridFactory, nodePrefab, parent);
         levelGenerator = new LevelGenerator(gridFactory, gridVisual, settings, pathfinder);
         enemySpawner = new EnemySpawner(enemyPrefab, stepMarkerPrefab, gridFactory);
         inputHandler = new LevelInputHandler(GenerateLevel);
@@ -30,7 +24,7 @@ public class GridManager : MonoBehaviour
         GenerateLevel();
     }
 
-    void Update()
+    public void Update()
     {
         inputHandler.Update();
     }
