@@ -18,13 +18,15 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         gridFactory = new GridFactory(settings);
+        gridFactory.GenerateGrid();
+
         gridVisual = new GridVisual(gridFactory, nodePrefab, transform);
         pathfinder = new Pathfinder(gridFactory);
         levelGenerator = new LevelGenerator(gridFactory, gridVisual, settings, pathfinder);
         enemySpawner = new EnemySpawner(enemyPrefab, stepMarkerPrefab, gridFactory);
         inputHandler = new LevelInputHandler(GenerateLevel);
 
-        gridFactory.GenerateGrid();
+
         GenerateLevel();
     }
 
