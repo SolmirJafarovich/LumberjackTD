@@ -11,14 +11,14 @@ public class LevelSystem
     private readonly LevelInputHandler inputHandler;
     private LevelObjectSpawner objectSpawner;
 
-    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, Transform parent)
+    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, GameObject playerPrefab, Transform parent)
     {
         gridFactory = new GridFactory(settings);
         gridFactory.GenerateGrid();
 
         pathfinder = new Pathfinder(gridFactory);
         gridVisual = new GridVisual(gridFactory, nodePrefab, parent);
-        objectSpawner = new LevelObjectSpawner(gridFactory, wallPrefab, testTowerPrefab);
+        objectSpawner = new LevelObjectSpawner(gridFactory, wallPrefab, testTowerPrefab, playerPrefab);
         levelGenerator = new LevelGenerator(gridFactory, gridVisual, settings, pathfinder, objectSpawner);
         enemySpawner = new EnemySpawner(enemyPrefab, stepMarkerPrefab, gridFactory);
 

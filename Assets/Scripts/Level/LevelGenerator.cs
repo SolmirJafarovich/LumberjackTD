@@ -93,6 +93,9 @@ public class LevelGenerator
         }
 
         objectSpawner.PlaceTower(new Vector2Int(2,2));
+
+        objectSpawner.PlacePlayer(EndPos);
+
     }
 
 }

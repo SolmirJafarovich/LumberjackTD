@@ -9,11 +9,13 @@ public class LevelSystemMono : MonoBehaviour
     [SerializeField] private GameObject testTowerPrefab;
     [SerializeField] private GameObject wallPrefab;
 
+    [SerializeField] private GameObject playerPrefab;
+
     private LevelSystem levelSystem;
 
     void Start()
     {
-        levelSystem = new LevelSystem(settings, nodePrefab, enemyPrefab, stepMarkerPrefab, testTowerPrefab, wallPrefab, transform);
+        levelSystem = new LevelSystem(settings, nodePrefab, enemyPrefab, stepMarkerPrefab, testTowerPrefab, wallPrefab, playerPrefab, transform);
     }
 
     void Update()
