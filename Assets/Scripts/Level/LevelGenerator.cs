@@ -7,16 +7,17 @@ public class LevelGenerator
     private readonly GridVisual gridVisual;
     private readonly GridSettings settings;
     private readonly Pathfinder pathfinder;
-
+    private LevelObjectSpawner objectSpawner;
     public Vector2Int StartPos { get; private set; }
     public Vector2Int EndPos { get; private set; }
 
-    public LevelGenerator(GridFactory gridFactory, GridVisual gridVisual, GridSettings settings, Pathfinder pathfinding)
+    public LevelGenerator(GridFactory gridFactory, GridVisual gridVisual, GridSettings settings, Pathfinder pathfinding, LevelObjectSpawner objectSpawner)
     {
         this.gridFactory = gridFactory;
         this.gridVisual = gridVisual;
         this.settings = settings;
         this.pathfinder = pathfinding;
+        this.objectSpawner = objectSpawner;
     }
 
     public bool GeneratePlayableLevel()
@@ -26,14 +27,19 @@ public class LevelGenerator
 
         while (tries++ < maxTries)
         {
+
             GenerateRandomLevel();
             var path = pathfinder.FindPath(StartPos, EndPos);
+
             if (path != null && path.Count > 1)
             {
                 Debug.Log($"Path found after {tries} attempt(s).");
+                SpawnStaticObjects();
                 return true;
             }
         }
+
+        
 
         Debug.LogWarning("Could not generate a playable level after max attempts.");
         return false;
@@ -66,9 +72,27 @@ public class LevelGenerator
             {
                 bool blocked = Random.value < settings.BlockedChance;
                 node.Type = blocked ? NodeType.Blocked : NodeType.Free;
+
+
             }
 
             gridVisual.UpdateNodeVisual(node);
         }
     }
+
+    private void SpawnStaticObjects()
+    {
+        objectSpawner.ClearObjects();
+
+        foreach (var node in gridFactory.GetAllNodes())
+        {
+            if (node.Type == NodeType.Blocked)
+            {
+                objectSpawner.PlaceWall(node.GridPosition);
+            }
+        }
+
+        objectSpawner.PlaceTower(new Vector2Int(2,2));
+    }
+
 }

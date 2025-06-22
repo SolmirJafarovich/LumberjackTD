@@ -15,6 +15,7 @@ public class GridFactory
     {
         grid.Clear();
 
+
         for (int x = 0; x < settings.Width; x++)
         {
             for (int y = 0; y < settings.Height; y++)
