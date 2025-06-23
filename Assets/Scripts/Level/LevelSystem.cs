@@ -9,7 +9,8 @@ public class LevelSystem
     private readonly EnemySpawner enemySpawner;
     private readonly Pathfinder pathfinder;
     private readonly LevelInputHandler inputHandler;
-    private LevelObjectSpawner objectSpawner;
+    private readonly LevelObjectSpawner objectSpawner;
+    private readonly PlayerSpawner playerSpawner;
 
     public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, GameObject playerPrefab, Transform parent)
     {
@@ -18,14 +19,16 @@ public class LevelSystem
 
         pathfinder = new Pathfinder(gridFactory);
         gridVisual = new GridVisual(gridFactory, nodePrefab, parent);
-        objectSpawner = new LevelObjectSpawner(gridFactory, wallPrefab, testTowerPrefab, playerPrefab);
+        objectSpawner = new LevelObjectSpawner(gridFactory, wallPrefab, testTowerPrefab);
         levelGenerator = new LevelGenerator(gridFactory, gridVisual, settings, pathfinder, objectSpawner);
         enemySpawner = new EnemySpawner(enemyPrefab, stepMarkerPrefab, gridFactory);
+        playerSpawner = new PlayerSpawner(gridFactory, playerPrefab, objectSpawner);
 
         inputHandler = new LevelInputHandler(GenerateLevel);
 
 
         GenerateLevel();
+
     }
 
     public void Update()
@@ -40,6 +43,8 @@ public class LevelSystem
         {
             var path = pathfinder.FindPath(levelGenerator.StartPos, levelGenerator.EndPos);
             enemySpawner.SpawnAndRun(path.ConvertAll(n => n.GridPosition));
+
+            playerSpawner.SpawnPlayer(levelGenerator.EndPos);
         }
     }
 }

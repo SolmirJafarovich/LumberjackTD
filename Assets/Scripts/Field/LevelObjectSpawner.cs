@@ -6,15 +6,13 @@ public class LevelObjectSpawner
     private readonly GridFactory factory;
     private readonly GameObject wallPrefab;
     private readonly GameObject testTowerPrefab;
-    private readonly GameObject playerPrefab;
     private readonly List<GameObject> spawnedObjects = new();
 
-    public LevelObjectSpawner(GridFactory factory, GameObject wallPrefab, GameObject testTowerPrefab, GameObject playerPrefab)
+    public LevelObjectSpawner(GridFactory factory, GameObject wallPrefab, GameObject testTowerPrefab)
     {
         this.factory = factory;
         this.wallPrefab = wallPrefab;
         this.testTowerPrefab = testTowerPrefab;
-        this.playerPrefab = playerPrefab;
     }
 
     public void PlaceObjectAt(Vector2Int pos, GameObject prefab)
@@ -54,8 +52,4 @@ public class LevelObjectSpawner
         PlaceObjectAt(pos, testTowerPrefab);
     }
 
-    public void PlacePlayer(Vector2Int pos)
-    {
-        PlaceObjectAt(pos, playerPrefab);
-    }
 }

@@ -9,20 +9,30 @@ public class PlayerInteraction : MonoBehaviour
     public KeyCode interactKey = KeyCode.E;
 
     [Header("References")]
-    public Transform cameraTransform; // сюда установи MainCamera или CameraHolder
+    public Transform cameraTransform;
+
+
+    private TowerBuilder towerBuilder;
+
+    public void Init(GridFactory gridFactory, LevelObjectSpawner spawner)
+    {
+        towerBuilder = new TowerBuilder(gridFactory, spawner);
+    }
 
     private void Update()
     {
+
+
+
         if (Input.GetKeyDown(attackKey))
         {
             TryAttack();
         }
 
-        if (Input.GetKeyDown(interactKey))
-        {
-            TryInteract();
-        }
+        // Постройка при удержании
+        TryInteract(Input.GetKey(interactKey));
     }
+
 
     void TryAttack()
     {
@@ -37,12 +47,23 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    void TryInteract()
+    void TryInteract(bool isHolding)
     {
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, interactionDistance))
         {
-            // Заглушка на мирное взаимодействие
-            Debug.Log($"Interacted with {hit.collider.name} (not implemented).");
+            bool built = towerBuilder.UpdateBuild(hit, isHolding);
+
+            if (built)
+                Debug.Log("Tower successfully built!");
+        }
+        else
+        {
+            // Сброс, если ничего не под прицелом
+            towerBuilder.UpdateBuild(new RaycastHit(), false);
         }
     }
+
+
+
 }
+
