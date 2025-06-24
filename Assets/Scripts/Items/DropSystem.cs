@@ -20,7 +20,7 @@ public class DropSystem
             float roll = Random.value;
             if (roll > entry.dropChance) continue;
 
-            int amount = Random.Range(entry.quantityRange.x, entry.quantityRange.y + 1);
+            int amount = entry.quantityRange.GetRandomValue();
             for (int i = 0; i < amount; i++)
             {
                 GameObject drop = Object.Instantiate(entry.prefab, position, Random.rotation);
