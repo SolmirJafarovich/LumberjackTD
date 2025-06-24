@@ -4,6 +4,7 @@ using UnityEngine;
 public class HealthComponent : MonoBehaviour, IDamageable
 {
     [SerializeField] private int maxHealth = 100;
+    [SerializeField] private DropTable dropTable;
     private HealthModel model;
 
     private void Awake()
@@ -27,6 +28,13 @@ public class HealthComponent : MonoBehaviour, IDamageable
     private void HandleDeath()
     {
         Debug.Log($"{gameObject.name} died");
+
+        if (dropTable != null)
+        {
+            var dropSystem = new DropSystem(dropTable);
+            dropSystem.Drop(transform.position);
+        }
+
         Destroy(gameObject); // Или пуллинг
     }
 

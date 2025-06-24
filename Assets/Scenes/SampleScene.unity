@@ -265,7 +265,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 8468387524907407834, guid: 1cad2ca756abbc64a86c8bdec2b2b8e9, type: 3}
   stepMarkerPrefab: {fileID: 3621669873784250261, guid: d090c9304dadf354ba141e99ce818c3b, type: 3}
   testTowerPrefab: {fileID: 2260495200229425879, guid: 990d4481eda45f14ebdc4c25b3103a8f, type: 3}
-  wallPrefab: {fileID: 1349771968178665082, guid: deb8617e576b4824aae35a5062751cbf, type: 3}
+  wallPrefab: {fileID: 1555187838911899939, guid: ee9325c20ce13cf47aa9af123f5c0dc4, type: 3}
   playerPrefab: {fileID: 7090396450597143671, guid: 00480906b00ce264ca691901141afc51, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
