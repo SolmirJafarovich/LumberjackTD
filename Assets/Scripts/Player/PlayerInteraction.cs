@@ -31,6 +31,11 @@ public class PlayerInteraction : MonoBehaviour
 
         // Постройка при удержании
         TryInteract(Input.GetKey(interactKey));
+
+        if (Input.GetKeyDown(interactKey))
+        {
+            TryPickup();
+        }
     }
 
 
@@ -60,6 +65,19 @@ public class PlayerInteraction : MonoBehaviour
         {
             // Сброс, если ничего не под прицелом
             towerBuilder.UpdateBuild(new RaycastHit(), false);
+        }
+    }
+
+
+    void TryPickup()
+    {
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, interactionDistance))
+        {
+            var pickup = hit.collider.GetComponent<IPickup>();
+            if (pickup != null)
+            {
+                pickup.OnPickup(gameObject);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8883672508935707098}
   - component: {fileID: 593631764243710108}
   - component: {fileID: -2325568287599341586}
+  - component: {fileID: -3417991036168905962}
   m_Layer: 0
   m_Name: EnemyStep 1
   m_TagString: Untagged
@@ -133,3 +134,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-3417991036168905962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3621669873784250261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b54603e73a5f6f4e95125c66822a5cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Item
