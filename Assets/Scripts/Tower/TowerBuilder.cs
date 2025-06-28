@@ -16,12 +16,15 @@ public class TowerBuilder
         this.buildTime = buildTime;
     }
 
-    public bool UpdateBuild(RaycastHit hit, bool isHoldingInteractKey)
+    /// <summary>
+    /// Возвращает прогресс строительства от 0 до 1 (или 0 если не строим)
+    /// </summary>
+    public float UpdateBuild(RaycastHit hit, bool isHoldingInteractKey)
     {
         if (!isHoldingInteractKey)
         {
             Reset();
-            return false;
+            return 0f;
         }
 
         Vector3 worldPos = hit.point;
@@ -31,7 +34,7 @@ public class TowerBuilder
         if (node == null || node.Type != NodeType.Free || node.PlacedObject != null)
         {
             Reset();
-            return false;
+            return 0f;
         }
 
         if (node != currentTarget)
@@ -47,13 +50,11 @@ public class TowerBuilder
             node.Type = NodeType.Blocked;
             objectSpawner.PlaceTower(gridPos);
             Reset();
-            return true;
+            return 0f;
         }
 
-        return false;
+        return buildProgress / buildTime;
     }
-
-    public float GetProgressPercent() => buildProgress / buildTime;
 
     private void Reset()
     {

@@ -11,8 +11,10 @@ public class PlayerInteraction : MonoBehaviour
     [Header("References")]
     public Transform cameraTransform;
 
-
     private TowerBuilder towerBuilder;
+
+    [SerializeField] private UIRingController buildProgressUI;
+
 
     public void Init(GridFactory gridFactory, LevelObjectSpawner spawner)
     {
@@ -56,17 +58,25 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, interactionDistance))
         {
-            bool built = towerBuilder.UpdateBuild(hit, isHolding);
+            float progress = towerBuilder.UpdateBuild(hit, isHolding);
 
-            if (built)
-                Debug.Log("Tower successfully built!");
+            if (progress > 0f)
+            {
+                buildProgressUI.Show();
+                buildProgressUI.SetProgress(progress);
+            }
+            else
+            {
+                buildProgressUI.Hide();
+            }
         }
         else
         {
-            // —брос, если ничего не под прицелом
             towerBuilder.UpdateBuild(new RaycastHit(), false);
+            buildProgressUI.Hide();
         }
     }
+
 
 
     void TryPickup()
