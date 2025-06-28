@@ -16,9 +16,7 @@ public class TowerBuilder
         this.buildTime = buildTime;
     }
 
-    /// <summary>
-    /// Возвращает прогресс строительства от 0 до 1 (или 0 если не строим)
-    /// </summary>
+
     public float UpdateBuild(RaycastHit hit, bool isHoldingInteractKey)
     {
         if (!isHoldingInteractKey)

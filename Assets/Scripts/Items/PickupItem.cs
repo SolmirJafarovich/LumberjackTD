@@ -1,14 +1,19 @@
 using UnityEngine;
 
-public class PickupItem : MonoBehaviour, IPickup
+public class ResourcePickup : MonoBehaviour, IPickup
 {
-    public string itemName = "Item";
+    [SerializeField] private string resourceType = "wood";
+    [SerializeField] private int amount = 1;
 
     public void OnPickup(GameObject picker)
     {
-        Debug.Log($"{picker.name} picked up {itemName}");
+        var interaction = picker.GetComponent<PlayerInteraction>();
+        if (interaction != null)
+        {
+            interaction.GetInventory().Add(resourceType, amount);
+        }
 
-        // “ут можно добавить логику Ч например, инвентарь, увеличение счЄтчика и т.п.
         Destroy(gameObject);
     }
 }
+

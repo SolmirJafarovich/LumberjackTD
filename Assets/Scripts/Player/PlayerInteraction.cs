@@ -5,33 +5,37 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Interaction Settings")]
     public float interactionDistance = 3f;
     public int attackDamage = 10;
+    public float attackCooldown = 1.0f;
     public KeyCode attackKey = KeyCode.Mouse0;
     public KeyCode interactKey = KeyCode.E;
 
     [Header("References")]
     public Transform cameraTransform;
+    [SerializeField] private UIRingController ringUI;
 
     private TowerBuilder towerBuilder;
+    private PlayerInventory inventory;
 
-    [SerializeField] private UIRingController buildProgressUI;
+    private float attackCooldownTimer = 0f;
+    private bool isBuilding = false;
 
+    public PlayerInventory GetInventory() => inventory;
 
     public void Init(GridFactory gridFactory, LevelObjectSpawner spawner)
     {
         towerBuilder = new TowerBuilder(gridFactory, spawner);
+        inventory = new PlayerInventory();
     }
 
     private void Update()
     {
-
-
+        HandleAttackCooldown();
 
         if (Input.GetKeyDown(attackKey))
         {
             TryAttack();
         }
 
-        // Постройка при удержании
         TryInteract(Input.GetKey(interactKey));
 
         if (Input.GetKeyDown(interactKey))
@@ -40,9 +44,27 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    private void HandleAttackCooldown()
+    {
+        if (attackCooldownTimer > 0f)
+        {
+            attackCooldownTimer -= Time.deltaTime;
+            ringUI.SetMode(UIRingController.RingMode.Clockwise);
+            ringUI.Show();
+            ringUI.SetProgress(attackCooldownTimer / attackCooldown);
+
+            if (attackCooldownTimer <= 0f)
+            {
+                ringUI.Hide();
+                attackCooldownTimer = 0f;
+            }
+        }
+    }
 
     void TryAttack()
     {
+        if (attackCooldownTimer > 0f) return;
+
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, interactionDistance))
         {
             var damageable = hit.collider.GetComponent<IDamageable>();
@@ -50,6 +72,12 @@ public class PlayerInteraction : MonoBehaviour
             {
                 damageable.TakeDamage(attackDamage);
                 Debug.Log($"Attacked {hit.collider.name} for {attackDamage} damage.");
+
+                attackCooldownTimer = attackCooldown;
+
+                ringUI.SetMode(UIRingController.RingMode.CounterClockwise);
+                ringUI.SetProgress(0f);
+                ringUI.Show();
             }
         }
     }
@@ -62,22 +90,28 @@ public class PlayerInteraction : MonoBehaviour
 
             if (progress > 0f)
             {
-                buildProgressUI.Show();
-                buildProgressUI.SetProgress(progress);
+                ringUI.SetMode(UIRingController.RingMode.Clockwise);
+                ringUI.SetProgress(progress);
+                ringUI.Show();
+                isBuilding = true;
             }
-            else
+            else if (isBuilding)
             {
-                buildProgressUI.Hide();
+                ringUI.Hide();
+                isBuilding = false;
             }
         }
         else
         {
-            towerBuilder.UpdateBuild(new RaycastHit(), false);
-            buildProgressUI.Hide();
+            if (isBuilding)
+            {
+                ringUI.Hide();
+                isBuilding = false;
+            }
+
+            towerBuilder.UpdateBuild(new RaycastHit(), false); 
         }
     }
-
-
 
     void TryPickup()
     {
@@ -90,8 +124,4 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
     }
-
-
-
 }
-

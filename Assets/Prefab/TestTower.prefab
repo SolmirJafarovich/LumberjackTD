@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1639133481089906676}
   - component: {fileID: 5796705134771645540}
   - component: {fileID: 8436823765036591170}
+  - component: {fileID: 5292602455186256159}
   m_Layer: 0
   m_Name: TestTower
   m_TagString: Untagged
@@ -124,3 +125,17 @@ MonoBehaviour:
   shootInterval: 1
   damage: 25
   targetTag: Enemy
+--- !u!114 &5292602455186256159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2260495200229425879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 768fc0cacd8e1a74794b0a7e0454a7aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 250
+  dropTable: {fileID: 0}
