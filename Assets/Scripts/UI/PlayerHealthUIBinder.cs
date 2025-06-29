@@ -2,16 +2,28 @@ using UnityEngine;
 
 public class PlayerHealthUIBinder : MonoBehaviour
 {
-    [SerializeField] private HealthComponent health;
+    private HealthComponent health;
 
-    private void Start()
+    public void Bind(HealthComponent newHealth)
     {
+        if (health != null)
+        {
+            health.OnHealthChanged -= UpdateUI;
+        }
+
+        health = newHealth;
         health.OnHealthChanged += UpdateUI;
+
+        // Обновим UI сразу
+        UpdateUI(health.CurrentHealth, health.MaxHealth);
     }
 
     private void OnDestroy()
     {
-        health.OnHealthChanged -= UpdateUI;
+        if (health != null)
+        {
+            health.OnHealthChanged -= UpdateUI;
+        }
     }
 
     private void UpdateUI(int current, int max)

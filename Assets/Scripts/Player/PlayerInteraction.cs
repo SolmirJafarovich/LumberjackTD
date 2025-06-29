@@ -11,20 +11,23 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("References")]
     public Transform cameraTransform;
-    [SerializeField] private UIRingController ringUI;
+
 
     private TowerBuilder towerBuilder;
     private PlayerInventory inventory;
+    private UIRingController ringUI;
+
 
     private float attackCooldownTimer = 0f;
     private bool isBuilding = false;
 
     public PlayerInventory GetInventory() => inventory;
 
-    public void Init(GridFactory gridFactory, LevelObjectSpawner spawner)
+    public void Init(GridFactory gridFactory, LevelObjectSpawner spawner, UIRingController ringUI)
     {
         towerBuilder = new TowerBuilder(gridFactory, spawner);
         inventory = new PlayerInventory();
+        this.ringUI = ringUI;
     }
 
     private void Update()

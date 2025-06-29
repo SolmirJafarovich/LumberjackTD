@@ -11,8 +11,10 @@ public class LevelSystem
     private readonly LevelInputHandler inputHandler;
     private readonly LevelObjectSpawner objectSpawner;
     private readonly PlayerSpawner playerSpawner;
+    private readonly DeathScreenUI deathScreenUI;
+    private readonly PlayerHealthUIBinder healthUIBinder;
 
-    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, GameObject playerPrefab, Transform parent)
+    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, GameObject playerPrefab, UIRingController ringUI, PlayerHealthUIBinder healthUIBinder, Transform parent)
     {
         gridFactory = new GridFactory(settings);
         gridFactory.GenerateGrid();
@@ -22,7 +24,7 @@ public class LevelSystem
         objectSpawner = new LevelObjectSpawner(gridFactory, wallPrefab, testTowerPrefab);
         levelGenerator = new LevelGenerator(gridFactory, gridVisual, settings, pathfinder, objectSpawner);
         enemySpawner = new EnemySpawner(enemyPrefab, stepMarkerPrefab, gridFactory);
-        playerSpawner = new PlayerSpawner(gridFactory, playerPrefab, objectSpawner);
+        playerSpawner = new PlayerSpawner(gridFactory, playerPrefab, objectSpawner, ringUI, healthUIBinder);
 
         inputHandler = new LevelInputHandler(GenerateLevel);
 

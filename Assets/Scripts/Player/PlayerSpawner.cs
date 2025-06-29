@@ -4,14 +4,18 @@ public class PlayerSpawner
 {
     private readonly GridFactory gridFactory;
     private readonly GameObject playerPrefab;
+    private readonly UIRingController ringUI;
     private readonly LevelObjectSpawner objectSpawner;
+    private readonly PlayerHealthUIBinder playerHealthUIBinder;
     private GameObject currentPlayer;
 
-    public PlayerSpawner(GridFactory gridFactory, GameObject playerPrefab, LevelObjectSpawner objectSpawner)
+    public PlayerSpawner(GridFactory gridFactory, GameObject playerPrefab, LevelObjectSpawner objectSpawner, UIRingController ringUI, PlayerHealthUIBinder healthUIBinder)
     {
         this.gridFactory = gridFactory;
         this.playerPrefab = playerPrefab;
         this.objectSpawner = objectSpawner;
+        this.ringUI = ringUI;
+        this.playerHealthUIBinder = healthUIBinder;
     }
 
     public void SpawnPlayer(Vector2Int spawnPosition)
@@ -27,11 +31,17 @@ public class PlayerSpawner
         var interaction = currentPlayer.GetComponent<PlayerInteraction>();
         if (interaction != null)
         {
-            interaction.Init(gridFactory, objectSpawner);
+            interaction.Init(gridFactory, objectSpawner, ringUI);
         }
         else
         {
             Debug.LogWarning("Player prefab missing PlayerInteraction component!");
+        }
+
+        var health = currentPlayer.GetComponent<HealthComponent>();
+        if (health != null)
+        {
+            playerHealthUIBinder.Bind(health);
         }
     }
 
