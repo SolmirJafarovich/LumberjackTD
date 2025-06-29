@@ -7,15 +7,17 @@ public class PlayerSpawner
     private readonly UIRingController ringUI;
     private readonly LevelObjectSpawner objectSpawner;
     private readonly PlayerHealthUIBinder playerHealthUIBinder;
+    private readonly DeathScreenUI deathScreenUI;
     private GameObject currentPlayer;
 
-    public PlayerSpawner(GridFactory gridFactory, GameObject playerPrefab, LevelObjectSpawner objectSpawner, UIRingController ringUI, PlayerHealthUIBinder healthUIBinder)
+    public PlayerSpawner(GridFactory gridFactory, GameObject playerPrefab, LevelObjectSpawner objectSpawner, UIRingController ringUI, PlayerHealthUIBinder healthUIBinder, DeathScreenUI deathScreenUI)
     {
         this.gridFactory = gridFactory;
         this.playerPrefab = playerPrefab;
         this.objectSpawner = objectSpawner;
         this.ringUI = ringUI;
-        this.playerHealthUIBinder = healthUIBinder;
+        playerHealthUIBinder = healthUIBinder;
+        this.deathScreenUI = deathScreenUI;
     }
 
     public void SpawnPlayer(Vector2Int spawnPosition)
@@ -42,7 +44,14 @@ public class PlayerSpawner
         if (health != null)
         {
             playerHealthUIBinder.Bind(health);
+            health.OnDied -= HandlePlayerDeath;
+            health.OnDied += HandlePlayerDeath;
         }
+    }
+
+    private void HandlePlayerDeath()
+    {
+        deathScreenUI.Show("Вы погибли");
     }
 
 }

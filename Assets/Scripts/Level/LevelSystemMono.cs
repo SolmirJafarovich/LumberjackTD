@@ -10,6 +10,7 @@ public class LevelSystemMono : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private UIRingController ringUI;
     [SerializeField] private PlayerHealthUIBinder healthUIBinder;
+    [SerializeField] private DeathScreenUI deathScreenUI;
 
     [SerializeField] private GameObject playerPrefab;
 
@@ -18,11 +19,16 @@ public class LevelSystemMono : MonoBehaviour
 
     void Start()
     {
-        levelSystem = new LevelSystem(settings, nodePrefab, enemyPrefab, stepMarkerPrefab, testTowerPrefab, wallPrefab, playerPrefab, ringUI, healthUIBinder, transform);
+        levelSystem = new LevelSystem(settings, nodePrefab, enemyPrefab, stepMarkerPrefab, testTowerPrefab, wallPrefab, playerPrefab, ringUI, healthUIBinder, deathScreenUI, transform);
     }
 
     void Update()
     {
         levelSystem?.Update();
+    }
+
+    public void RestartLevelFromUI()
+    {
+        levelSystem.RestartLevel();
     }
 }

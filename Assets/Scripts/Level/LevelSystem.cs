@@ -14,7 +14,9 @@ public class LevelSystem
     private readonly DeathScreenUI deathScreenUI;
     private readonly PlayerHealthUIBinder healthUIBinder;
 
-    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, GameObject playerPrefab, UIRingController ringUI, PlayerHealthUIBinder healthUIBinder, Transform parent)
+
+
+    public LevelSystem(GridSettings settings, GameObject nodePrefab, GameObject enemyPrefab, GameObject stepMarkerPrefab, GameObject testTowerPrefab, GameObject wallPrefab, GameObject playerPrefab, UIRingController ringUI, PlayerHealthUIBinder healthUIBinder, DeathScreenUI deathScreenUI, Transform parent)
     {
         gridFactory = new GridFactory(settings);
         gridFactory.GenerateGrid();
@@ -24,7 +26,8 @@ public class LevelSystem
         objectSpawner = new LevelObjectSpawner(gridFactory, wallPrefab, testTowerPrefab);
         levelGenerator = new LevelGenerator(gridFactory, gridVisual, settings, pathfinder, objectSpawner);
         enemySpawner = new EnemySpawner(enemyPrefab, stepMarkerPrefab, gridFactory);
-        playerSpawner = new PlayerSpawner(gridFactory, playerPrefab, objectSpawner, ringUI, healthUIBinder);
+        playerSpawner = new PlayerSpawner(gridFactory, playerPrefab, objectSpawner, ringUI, healthUIBinder, deathScreenUI);
+        this.deathScreenUI = deathScreenUI;
 
         inputHandler = new LevelInputHandler(GenerateLevel);
 
@@ -48,5 +51,12 @@ public class LevelSystem
 
             playerSpawner.SpawnPlayer(levelGenerator.EndPos);
         }
+    }
+
+    public void RestartLevel()
+    {
+        Time.timeScale = 1f;
+        deathScreenUI.Hide();
+        GenerateLevel();
     }
 }
